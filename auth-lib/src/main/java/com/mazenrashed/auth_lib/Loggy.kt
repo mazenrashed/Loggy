@@ -56,7 +56,7 @@ class Loggy private constructor(){
     companion object {
         private const val NOT_INIT_MESSAGE =
             "use loggy.init() to setup the lib"
-        private var instance: Loggy = Loggy()
+        var instance: Loggy = Loggy()
     }
 
     enum class Platforms {
