@@ -46,19 +46,17 @@ class Loggy private constructor(){
         }
     }
 
+    fun init(googleClientId: String?, twitterClientId: String?, twitterSecretId: String?) {
+        instance.googleClientId = googleClientId
+        instance.twitterConsumerKey = twitterClientId
+        instance.twitterConsumerSecret = twitterSecretId
 
+    }
 
     companion object {
         private const val NOT_INIT_MESSAGE =
             "use loggy.init() to setup the lib"
         private var instance: Loggy = Loggy()
-
-        fun init(googleClientId: String?, twitterClientId: String?, twitterSecretId: String?) {
-            instance.googleClientId = googleClientId
-            instance.twitterConsumerKey = twitterClientId
-            instance.twitterConsumerSecret = twitterSecretId
-
-        }
     }
 
     enum class Platforms {
