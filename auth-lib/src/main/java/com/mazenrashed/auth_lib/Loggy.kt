@@ -4,7 +4,7 @@ import android.app.Activity
 import com.mazenrashed.auth_lib.login_by_social_media.*
 import java.lang.Exception
 
-class Loggy {
+class Loggy private constructor(){
 
     private var googleClientId: String? = null
     private var twitterConsumerKey: String? = null
@@ -50,23 +50,13 @@ class Loggy {
 
     companion object {
         private const val NOT_INIT_MESSAGE =
-            "use SocialMediaLogin.getInstance().init() to setup the lib"
-        private var loggy: Loggy? = null
-
-        @JvmStatic
-        fun getInstance(): Loggy {
-            if (loggy == null)
-                loggy =
-                    Loggy()
-
-            return loggy
-                ?: getInstance()
-        }
+            "use loggy.init() to setup the lib"
+        private var instance: Loggy = Loggy()
 
         fun init(googleClientId: String?, twitterClientId: String?, twitterSecretId: String?) {
-            loggy?.googleClientId = googleClientId
-            loggy?.twitterConsumerKey = twitterClientId
-            loggy?.twitterConsumerSecret = twitterSecretId
+            instance.googleClientId = googleClientId
+            instance.twitterConsumerKey = twitterClientId
+            instance.twitterConsumerSecret = twitterSecretId
 
         }
     }
