@@ -21,19 +21,13 @@ class LoginByGoogle(private val activity: Activity, clientId: String) :
 
     override fun login(loginListener: (SocialLoginResult) -> Unit) {
         this.loginListener = loginListener
+        //allow user to choose login account again
+        mGoogleSignInClient.signOut()
 
-        val account = GoogleSignIn.getLastSignedInAccount(activity)
-
-        if (account != null) {
-            //user already logged in
-            invokeLoginSuccess(account.id, account.email, account.displayName, account.idToken)
-        } else {
-            val signInIntent = mGoogleSignInClient.signInIntent
-            activity.startActivityForResult(
-                signInIntent,
-                RC_SIGN_IN
-            )
-        }
+        activity.startActivityForResult(
+            mGoogleSignInClient.signInIntent,
+            RC_SIGN_IN
+        )
     }
 
     private fun invokeLoginSuccess(
@@ -72,6 +66,8 @@ class LoginByGoogle(private val activity: Activity, clientId: String) :
                 )
             )
         }
+
+
     }
 
     companion object {
