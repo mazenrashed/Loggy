@@ -29,7 +29,7 @@ class LoginByFacebook(private val activity: Activity) :
 
                             loginListener(
                                 SocialLoginResult.Success(
-                                    loginResult?.accessToken?.token?:"",
+                                    loginResult?.accessToken?.token ?: "",
                                     id,
                                     name,
                                     ""

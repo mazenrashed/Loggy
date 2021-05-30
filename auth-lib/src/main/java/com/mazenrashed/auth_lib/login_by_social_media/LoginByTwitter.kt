@@ -2,11 +2,10 @@ package com.mazenrashed.auth_lib.login_by_social_media
 
 import android.app.Activity
 import android.content.Intent
-import com.mazenrashed.auth_lib.utils.toast
 import com.twitter.sdk.android.core.*
 import com.twitter.sdk.android.core.identity.TwitterAuthClient
 
-class LoginByTwitter(private val activity: Activity, consumerKey : String, consumerSecret : String) :
+class LoginByTwitter(private val activity: Activity, consumerKey: String, consumerSecret: String) :
     LoginBy {
 
     init {
@@ -28,14 +27,14 @@ class LoginByTwitter(private val activity: Activity, consumerKey : String, consu
     override fun login(loginListener: (SocialLoginResult) -> Unit) {
         twitterAuth.authorize(activity, object : Callback<TwitterSession>() {
             override fun success(result: Result<TwitterSession>?) {
-                result?.data?.userName?.toast(activity)
                 result?.data?.also {
                     loginListener(
                         SocialLoginResult.Success(
-                            it.authToken.token,
-                            it.userId.toString(),
-                            it.userName,
-                            ""
+                            token = it.authToken.token,
+                            id = it.userId.toString(),
+                            name = it.userName,
+                            email = "",
+                            tokenSecret = it.authToken.secret
                         )
                     )
                 }

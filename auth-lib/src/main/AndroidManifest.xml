@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mazenrashed.auth_lib" />
+<manifest package="com.mazenrashed.auth_lib" />

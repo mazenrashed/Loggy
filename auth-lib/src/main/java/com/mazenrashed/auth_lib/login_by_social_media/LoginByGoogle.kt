@@ -15,6 +15,7 @@ class LoginByGoogle(private val activity: Activity, clientId: String) :
     private var loginListener: ((SocialLoginResult) -> Unit)? = null
     private var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(clientId)
+        .requestServerAuthCode(clientId)
         .requestEmail()
         .build()
     private val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
@@ -34,36 +35,48 @@ class LoginByGoogle(private val activity: Activity, clientId: String) :
         accountId: String?,
         displayName: String?,
         email: String?,
-        idToken: String?
+        idToken: String?,
+        serverAuthCode: String?
     ) {
-        if (displayName != null && email != null && accountId != null && idToken != null)
+        if (displayName != null && email != null && accountId != null && idToken != null && serverAuthCode != null)
             loginListener?.invoke(
                 SocialLoginResult.Success(
-                    idToken,
-                    accountId,
-                    displayName,
-                    email
+                    token = idToken,
+                    id = accountId,
+                    name = displayName,
+                    email = email,
+                    serverAuthCode = serverAuthCode
                 )
             )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> =
-                GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
+            try {
+                val task: Task<GoogleSignInAccount> =
+                    GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleSignInResult(task)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            invokeLoginSuccess(account?.id, account?.email, account?.displayName, account?.idToken)
+
+            invokeLoginSuccess(
+                accountId = account?.id,
+                email = account?.email,
+                displayName = account?.displayName,
+                serverAuthCode = account?.serverAuthCode,
+                idToken = account?.idToken
+            )
         } catch (e: ApiException) {
             loginListener?.invoke(
-                SocialLoginResult.Error(
-                    e
-                )
+                SocialLoginResult.Error(e)
             )
         }
 

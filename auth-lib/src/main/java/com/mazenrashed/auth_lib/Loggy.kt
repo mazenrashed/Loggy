@@ -3,19 +3,18 @@ package com.mazenrashed.auth_lib
 import android.app.Activity
 import android.content.Intent
 import com.mazenrashed.auth_lib.login_by_social_media.*
-import java.lang.Exception
 
-class Loggy private constructor(){
+class Loggy private constructor() {
 
     private var googleClientId: String? = null
     private var twitterConsumerKey: String? = null
     private var twitterConsumerSecret: String? = null
-    private var loginBy : LoginBy? = null
+    private var loginBy: LoginBy? = null
 
     fun loginBySocialMedia(
         platform: Platforms,
         activity: Activity,
-        resultCallback: ((LoginResult) -> Unit)
+        resultCallback: ((SocialLoginResult) -> Unit)
     ) {
         loginBy = when (platform) {
             Platforms.GOOGLE -> LoginByGoogle(
@@ -38,11 +37,11 @@ class Loggy private constructor(){
         loginBy?.login {
             when (it) {
                 is SocialLoginResult.Error -> {
-                    resultCallback(LoginResult.Error(it.throwable))
+                    resultCallback(it)
                 }
 
                 is SocialLoginResult.Success -> {
-                    resultCallback(LoginResult.Success(it.token))
+                    resultCallback(it)
                 }
             }
         }
@@ -55,7 +54,7 @@ class Loggy private constructor(){
 
     }
 
-    fun setOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
+    fun setOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         loginBy?.onActivityResult(requestCode, resultCode, data)
     }
 
