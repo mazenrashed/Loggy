@@ -24,18 +24,24 @@ class LoginByFacebook(private val activity: Activity) :
                         val request = GraphRequest.newMeRequest(
                             loginResult?.accessToken
                         ) { jsonObject, response ->
-                            val name = jsonObject.getString("name")
-                            val id = jsonObject.getString("id")
+                            val name = jsonObject?.getString("name")
+                            val id = jsonObject?.getString("id")
 
-                            loginListener(
-                                SocialLoginResult.Success(
-                                    loginResult?.accessToken?.token ?: "",
-                                    id,
-                                    name,
-                                    ""
+
+                            if (id != null && name != null) {
+                                loginListener(
+                                    SocialLoginResult.Success(
+                                        loginResult?.accessToken?.token ?: "",
+                                        id,
+                                        name,
+                                        ""
+                                    )
                                 )
-                            )
-
+                            } else {
+                                loginListener(
+                                    SocialLoginResult.Error(Exception("There is no id or name"))
+                                )
+                            }
                         }
                         val parameters = Bundle()
                         parameters.putString("fields", "id,name,email,gender,birthday")
